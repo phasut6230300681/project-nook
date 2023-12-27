@@ -6,7 +6,7 @@
 
 body {
   background-color: #c5caca;
-  min-width: 600px;
+  width: 100%;
 }
 
 /* header */
@@ -16,10 +16,16 @@ body {
   border-radius: 50%;
 }
 
+.nav-item:hover,
+.dropdown-item:hover {
+  background-color: #c5caca;
+  transition: 0.5s;
+}
+
 /* end header */
 
+/* table */
 table {
-  width: 100%;
   border-collapse: collapse;
   margin: 20px 0; /* Adjusted the margin property for top and bottom spacing */
 }
@@ -43,4 +49,26 @@ tbody tr:nth-child(odd) {
 
 tbody tr:nth-child(even) {
   background-color: #f8f9fa;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 12px 20px;
+  box-sizing: border-box;
+}
+input[type="number"] {
+  width: 100%;
+  padding: 12px 20px;
+  box-sizing: border-box;
+}
+
+/* end table */
+
+/* responsive */
+@media only screen and (max-width: 600px) {
+  header {
+    width: 1000px;
+  }
+  
+  
 }

@@ -14,7 +14,7 @@
 
 <body>
     <!-- top -->
-    <header class="navbar navbar-expand-lg navbar-light" style="background-color: #046b64;">
+    <header class="navbar navbar-expand-lg navbar-light w-100" style="background-color: #046b64;">
         <div class="container-fluid">
             <!-- logo -->
             <img class="navbar-brand" src="./image/ku_logo.png" alt="kusrc logo">
@@ -24,7 +24,7 @@
             </button>
             <!-- list nav -->
             <div class="collapse navbar-collapse bg-body" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul id="nav-header" class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">ตารางสอน</a>
                     </li>
@@ -42,15 +42,20 @@
                                 <hr class="dropdown-divider">
                             </li>
                             <li><a class="dropdown-item" href="#">Something else here</a></li>
+
                         </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
                     </li>
+                    <li class="nav-item">
+                        <img class="pt-2" src="./image/notifications_logo.png" alt="">
+                    </li>
+
+
                 </ul>
                 <!-- nav right -->
-                <div class="dropdown">
-                    <img class="me-5" src="./image/notifications_logo.png" alt="">
+                <div class="right">
                     <img class="me-3" id="user-logo" src="./image/book.jpg" alt="">
                     <span class="me-2">ชื่อ-สกุล</span>
                 </div>
@@ -61,9 +66,9 @@
 
     <!-- center -->
     <main class="d-flex">
-        <!-- left sidebar -->
         <div class="container-fluid">
             <div class="row flex-nowrap">
+                <!-- sidebar -->
                 <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-light">
                     <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                         <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
@@ -101,51 +106,26 @@
                         <hr>
                     </div>
                 </div>
+                <!-- end sidebar -->
+
                 <!-- register-->
-                <div class="col py-3">
-                    <table class="table w-100">
+                <!--  <div id="register" class="col py-3"> -->
+                <div id="register" class="col py-3">
+                    <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">Course ID</th>
-                                <th scope="col">Course name</th>
-                                <th scope="col">Start time</th>
-                                <th scope="col">End time</th>
-                                <th scope="col">Room</th>
-                                <th scope="col">รูปแบบ</th>1
-                                <th scope="col">หมู่เรียน</th>
+                                <th scope="col" style="width:100px">Course ID</th>
+                                <th scope="col" style="min-width:200px">Course name</th>
+                                <th scope="col" style="width:100px">Start time</th>
+                                <th scope="col" style="width:100px">End time</th>
+                                <th scope="col" style="width:100px">Room</th>
+                                <th scope="col" style="width:100px">รูปแบบ</th>
+                                <th scope="col" style="width:100px">หมู่เรียน</th>
                             </tr>
                         </thead>
                         <tbody id="tableForm">
                             <tr>
-                                <td>
-                                    <?php $a = [0, 1, 2] ?>
-                                    <select name="dropdownA" id="dropdownA" onchange="updateDropdownB()">
-                                        <?php
-                                        foreach ($a as $aa)
-                                        {
-                                            echo "<option value='$aa'>";
-                                            echo "$aa";
-                                            echo "</option>";
-                                        }
-                                        ?>
-                                        <option value=""></option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <?php $b = ['abs', 'data', 'qwe'] ?>
-                                    <select name="dropdownB" id="dropdownB">
-                                        <?php
-                                        foreach ($b as $aa)
-                                        {
-                                            echo "<option value='$aa'>";
-                                            echo "$aa";
-                                            echo "</option>";
-                                        }
-                                        ?>
-                                        <option value=""></option>
-                                    </select>
 
-                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -163,61 +143,26 @@
     <!-- end center -->
     <script>
         document.getElementById('add').addEventListener('click', () => {
-            var tableForm = document.getElementById('tableForm');
-            var newRow = tableForm.insertRow(tableForm.rows.length);
+            let tableForm = document.getElementById('tableForm');
+            let newRow = tableForm.insertRow(tableForm.rows.length);
             const inputName = ["course_id", "course_name", "start_time", "end_time", "room", "format", "sec"];
-            for (var i = 0; i < 7; i++) {
-                var cell = newRow.insertCell(i);
-                var input = document.createElement('input');
-                input.type = 'text';
+            const inputType = ["number", "text", "number", "number", "number", "text", "number"];
+            for (let i = 0; i < 7; i++) {
+                let cell = newRow.insertCell(i);
+                let input = document.createElement('input');
+                input.classList.add
+                input.type = inputType[i];
                 input.name = inputName[i];
                 cell.appendChild(input);
             }
         });
 
         document.getElementById('remove').addEventListener('click', () => {
-            var tableForm = document.getElementById('tableForm');
+            let tableForm = document.getElementById('tableForm');
             if (tableForm.rows.length > 1) {
                 tableForm.deleteRow(tableForm.rows.length - 1);
             }
         });
-
-
-
-        //test
-
-        function updateDropdownB() {
-            // Get selected value from dropdownA
-            var selectedValueA = document.getElementById('dropdownA').value;
-
-            // Get reference to dropdownB
-            var dropdownB = document.getElementById('dropdownB');
-
-            // Clear existing options
-            dropdownB.innerHTML = '';
-
-            // Array of options for dropdownB corresponding to the selected value in dropdownA
-            var optionsB = [];
-
-            // Populate optionsB based on the selected value of dropdownA
-            switch (selectedValueA) {
-                case '0':
-                    optionsB = ['abs'];
-                    break;
-                case '1':
-                    optionsB = ['data'];
-                    break;
-                    // Add additional cases if needed
-            }
-
-            // Add options to dropdownB
-            optionsB.forEach(function(option) {
-                var optionElement = document.createElement('option');
-                optionElement.value = option;
-                optionElement.textContent = option;
-                dropdownB.appendChild(optionElement);
-            });
-        }
     </script>
 </body>
 
