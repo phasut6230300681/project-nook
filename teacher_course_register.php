@@ -1,3 +1,4 @@
+<?php include('./include/db.php') ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -111,59 +112,101 @@
                 <!-- register-->
                 <!--  <div id="register" class="col py-3"> -->
                 <div id="register" class="col py-3">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col" style="width:100px">Course ID</th>
-                                <th scope="col" style="min-width:200px">Course name</th>
-                                <th scope="col" style="width:100px">Start time</th>
-                                <th scope="col" style="width:100px">End time</th>
-                                <th scope="col" style="width:100px">Room</th>
-                                <th scope="col" style="width:100px">รูปแบบ</th>
-                                <th scope="col" style="width:100px">หมู่เรียน</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableForm">
-                            <tr>
+                    <form action="">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" style="min-width:150px">Course ID</th>
+                                    <th scope="col" style="min-width:200px">Course name</th>
+                                    <th scope="col" style="width:100px">Start time</th>
+                                    <th scope="col" style="width:100px">End time</th>
+                                    <th scope="col" style="width:150px">Room</th>
+                                    <th scope="col" style="width:150px">รูปแบบ</th>
+                                    <th scope="col" style="width:150px">หมู่เรียน</th>
+                                    <!-- <th scope="col" style="width:70px">ยื่นยัน</th> -->
+                                </tr>
+                            </thead>
+                            <tbody id="tableForm">
 
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="w-100 text-end">
-                        <button id="remove" class="btn btn-danger"><img src="/image/remove.png" alt="">Remove Row</button>
-                        <button id="add" class="btn  btn-success"><img src="/image/add.png" alt="">Add Row</button>
+                            </tbody>
+
+                            <tfoot>
+                                <tr>
+                                    <td colspan="6" class=" border-0"></td>
+                                    <td class=" border-0"><input type="submit" id="btn-submit" value="Submit" class="btn btn-primary mt-3 mb-3 border-0"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </form>
+
+                    <div id="btn-add-remove" class="w-100">
+                        <div id="btn-group">
+                            <button id="remove" class="btn btn-danger"><img src="/image/remove.png" alt="">Remove Row</button>
+                            <button id="add" class="btn  btn-success"><img src="/image/add.png" alt="">Add Row</button>
+                        </div>
+                    </div>
+
+                    <!-- คอร์สอาจารย์ -->
+                    <div>
+                        lorem ipsum dolor sit amet, con
                     </div>
                 </div>
                 <!-- end register -->
             </div>
             <!-- div container -->
         </div>
-        <!-- end sidebar -->
+        <!-- end main container -->
+
     </main>
+
     <!-- end center -->
     <script>
+        rowCount = 0
+        document.getElementById('btn-submit').disabled = true;
+        // add
         document.getElementById('add').addEventListener('click', () => {
-            let tableForm = document.getElementById('tableForm');
-            let newRow = tableForm.insertRow(tableForm.rows.length);
-            const inputName = ["course_id", "course_name", "start_time", "end_time", "room", "format", "sec"];
-            const inputType = ["number", "text", "number", "number", "number", "text", "number"];
-            for (let i = 0; i < 7; i++) {
-                let cell = newRow.insertCell(i);
-                let input = document.createElement('input');
-                input.classList.add
+            let tableForm = document.getElementById('tableForm')
+            let tr = document.createElement('tr')
+            const inputName = ["course_id[]", "course_name[]", "start_time[]", "end_time[]", "room[]", "format[]", "sec[]", "submit[]"];
+            const inputType = ["number", "text", "number", "number", "number", "text", "number", "submit"];
+            for (let i = 0; i < 8 - 1; i++) {
+                let td = document.createElement("td")
+                let input = document.createElement("input")
+                input.attributes
                 input.type = inputType[i];
                 input.name = inputName[i];
-                cell.appendChild(input);
+                input.setAttribute('required', 'true');
+                td.appendChild(input)
+                tr.appendChild(td)
             }
+            tableForm.appendChild(tr)
+            console.log(rowCount);
+            rowCount++
+            updateRowCount()
         });
-
+        // remove
         document.getElementById('remove').addEventListener('click', () => {
             let tableForm = document.getElementById('tableForm');
-            if (tableForm.rows.length > 1) {
-                tableForm.deleteRow(tableForm.rows.length - 1);
+            tableForm.deleteRow(tableForm.rows.length - 1);
+            if (rowCount == 0) {
+                rowCount = 0
+            } else {
+                rowCount--
             }
+            console.log(rowCount);
+            updateRowCount()
         });
+        // submit
+        function updateRowCount() {
+            if (rowCount == 0) {
+                document.getElementById('btn-submit').disabled = true;
+            } else if (rowCount > 0) {
+                document.getElementById('btn-submit').disabled = false;
+            }
+        }
     </script>
+
 </body>
 
 </html>
