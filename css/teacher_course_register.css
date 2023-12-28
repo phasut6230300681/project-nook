@@ -50,7 +50,7 @@ td {
 }
 
 thead {
-  background-color: #046b64;
+  background-color: #2c5364;
   color: #f2f2f2;
 }
 
@@ -66,11 +66,13 @@ input[type="text"] {
   width: 100%;
   padding: 12px 20px;
   box-sizing: border-box;
+  
 }
 input[type="number"] {
   width: 100%;
   padding: 12px 20px;
   box-sizing: border-box;
+  
 }
 
 #btn-add-remove{

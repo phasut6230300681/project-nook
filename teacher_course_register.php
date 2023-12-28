@@ -24,13 +24,13 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <!-- list nav -->
-            <div class="collapse navbar-collapse bg-body" id="navbarSupportedContent">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul id="nav-header" class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">ตารางสอน</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
+                        <a class="nav-link active" href="#">ดูวิชาที่เปิด</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -93,7 +93,7 @@
                             </li>
                             <li>
                                 <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
-                                    <img src="/image/home_FILL0_wght400_GRAD0_opsz24.png" alt=""> <span class="ms-1 d-none d-sm-inline">Bootstrap</span></a>
+                                    <img src="/image/home_FILL0_wght400_GRAD0_opsz24.png" alt=""> <span class="ms-1 d-none d-sm-inline dropdown-toggle">Bootstrap </span></a>
                                 <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
                                     <li class="w-100">
                                         <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1</a>
@@ -114,15 +114,15 @@
                 <div id="register" class="col py-3">
                     <form action="">
                         <table class="table">
-                            <thead>
+                            <thead class="">
                                 <tr>
-                                    <th scope="col" style="min-width:150px">Course ID</th>
-                                    <th scope="col" style="min-width:200px">Course name</th>
-                                    <th scope="col" style="width:100px">Start time</th>
-                                    <th scope="col" style="width:100px">End time</th>
-                                    <th scope="col" style="width:150px">Room</th>
-                                    <th scope="col" style="width:150px">รูปแบบ</th>
-                                    <th scope="col" style="width:150px">หมู่เรียน</th>
+                                    <th scope="col" style="max-width:150px;width:150px">Course ID</th>
+                                    <th scope="col" style="max-width:200px;width:200px">Course name</th>
+                                    <th scope="col" style="max-width:150px;width:150px">Start time</th>
+                                    <th scope="col" style="max-width:150px;width:150px">End time</th>
+                                    <th scope="col" style="max-width:150px;width:150px">Room</th>
+                                    <th scope="col" style="max-width:150px;width:150px">รูปแบบ</th>
+                                    <th scope="col" style="max-width:150px;width:150px">หมู่เรียน</th>
                                     <!-- <th scope="col" style="width:70px">ยื่นยัน</th> -->
                                 </tr>
                             </thead>
@@ -146,13 +146,14 @@
                             <button id="add" class="btn  btn-success"><img src="/image/add.png" alt="">Add Row</button>
                         </div>
                     </div>
+                    <!-- end register -->
 
-                    <!-- คอร์สอาจารย์ -->
+                    <!-- course status -->
                     <div>
                         lorem ipsum dolor sit amet, con
                     </div>
                 </div>
-                <!-- end register -->
+
             </div>
             <!-- div container -->
         </div>
@@ -173,16 +174,17 @@
             for (let i = 0; i < 8 - 1; i++) {
                 let td = document.createElement("td")
                 let input = document.createElement("input")
-                input.attributes
                 input.type = inputType[i];
                 input.name = inputName[i];
-                input.setAttribute('required', 'true');
+                if (i != 4) {
+                    input.setAttribute('required', 'true');
+                }
                 td.appendChild(input)
                 tr.appendChild(td)
             }
             tableForm.appendChild(tr)
-            console.log(rowCount);
             rowCount++
+            console.log(rowCount);
             updateRowCount()
         });
         // remove
