@@ -49,6 +49,10 @@ aside {
     border-radius: 20px;
   }
 }
+#section-right{
+    width: 90%;
+    height: 50px;
+}
 @media only screen and (max-width: 768px) {
   aside {
     width: 100px;

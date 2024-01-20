@@ -106,7 +106,7 @@ include("./include/function.php")
             </span>
             <br>
             <!-- display -->
-            <div id="section-right" class="bg-body d-flex align-items-center justify-content-between border border-dark pe-5">
+            <div id="section-right" class="bg-body d-flex align-items-center justify-content-between border border-dark pe-3">
                 <div>
                     <span class="material-symbols-outlined ms-1 bg-body">
                         linked_services
