@@ -5,15 +5,17 @@
 <head>
     <!-- copy -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php include('./include/bootstrap.php') ?>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <!-- bootstrap -->
+    <?php include('./include/bootstrap.php') ?>
     <!-- title -->
     <title>Teacher course register</title>
-    <!-- csss -->
+    <!-- css -->
     <link rel="stylesheet" href="./css/teacher_course_register.css">
 </head>
 
 <body>
+
     <!-- top -->
     <header class="navbar navbar-expand-lg navbar-light w-100" style="background-color: #046b64;">
         <div class="container-fluid">
@@ -150,7 +152,8 @@
 
                     <!-- course status -->
                     <div>
-                        lorem ipsum dolor sit amet, con
+                        ตารางขอลงทะเบียนด้านล่าง(ยังไม่ทำ)
+
                     </div>
                 </div>
 
