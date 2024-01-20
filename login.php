@@ -1,6 +1,7 @@
 <?php
 session_start();
 include("./include/db.php");
+include("./include/function.php")
 ?>
 
 <!DOCTYPE html>
@@ -10,13 +11,14 @@ include("./include/db.php");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <!-- copy -->
     <?php
     include('./include/bootstrap.php')
     ?>
     <!--  -->
     <link rel="stylesheet" href="/css/login.css">
 </head>
-
+<!--  -->
 
 
 <body>
@@ -72,21 +74,13 @@ include("./include/db.php");
 
         if ($username != '' && $password != '')
         {
-
-            // $_SESSION['user'] = $email;
-            // header("Location: https://www.google.co.th/");
-            $sql = "SELECT * FROM user WHERE username=:username AND password=:password";
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(":username", $username);
-            $stmt->bindParam(":password", $password);
-            $stmt->execute();
+            //$checkUser = RegisterData::isFound($conn, $username, $password);
             //มี user ใน database    
-            if ($stmt->rowCount() == 1)
-            {
-                $_SESSION['user'] = $username;
-
-                echo "<script>console.log(" . $stmt->rowCount() . ");</script>";
-                header("location: https://www.google.co.th/");
+            if (RegisterData::isFound($conn, $username, $password)->rowCount() == 1)
+            {   // ส่งตัวแปรข้าม page
+                $_SESSION['username'] = $username;
+                $_SESSION['login-type'] = "admin";
+                header("location: admin_index.php");
                 exit();
             }
             // ไม่มีข้อมูล
