@@ -1,6 +1,5 @@
 <?php
 session_start();
-include("./include/db.php");
 include("./include/function.php")
 ?>
 
@@ -76,11 +75,11 @@ include("./include/function.php")
         {
             //$checkUser = RegisterData::isFound($conn, $username, $password);
             //มี user ใน database    
-            if (RegisterData::isFound($conn, $username, $password)->rowCount() == 1)
+            if (RegisterData::isFound($username, $password) == 1)
             {   // ส่งตัวแปรข้าม page
                 $_SESSION['username'] = $username;
-                $_SESSION['login-type'] = "admin";
-                header("location: admin_index.php");
+                $_SESSION['login_type'] = "admin";
+                header("location: admin_index.php?branch");
                 exit();
             }
             // ไม่มีข้อมูล
