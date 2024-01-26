@@ -4,23 +4,18 @@ $username = "root";
 $password = "";
 $db = "se";
 
-try
-{
+try {
     $conn = new PDO("mysql:host=$servername;dbname=$db", $username, $password);
     // set the PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     #echo "Connected successfully";
-}
-catch (PDOException $e)
-{
+} catch (PDOException $e) {
     echo "Connection failed <br>" . $e;
 }
 //-----------------------------//
-class RegisterData
-{
-    public static function isFound($username, $password)
-    {
+class RegisterData {
+    public static function rowCount($username, $password) {
         global $conn;
         $sql = "SELECT * FROM user WHERE username=:username AND password=:password";
         $stmt = $conn->prepare($sql);
@@ -32,8 +27,7 @@ class RegisterData
     }
 
 
-    public static function getData($username)
-    {
+    public static function getData($username) {
         global $conn;
         $sql = "SELECT * FROM user WHERE username=:username";
         $stmt = $conn->prepare($sql);
@@ -44,10 +38,8 @@ class RegisterData
     }
 }
 
-class Branch
-{
-    public static function isFound($name, $tag, $code)
-    {
+class Branch {
+    public static function rowCount($name, $tag, $code) {
         global $conn;
         $sql = "SELECT * FROM branch WHERE branch_name=:name OR branch_tag=:tag OR branch_code_tag=:code";
         $stmt = $conn->prepare($sql);
@@ -59,13 +51,31 @@ class Branch
         return $stmt->rowCount();
     }
 
-    public static function showAll()
-    {
+    public static function showAll() {
         global $conn;
         $sql = "SELECT * FROM branch";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
 
         return $stmt;
+    }
+}
+
+class Member {
+    public static function rowCount($email) {
+        global $conn;
+        $sql = "SELECT username FROM user WHERE username=:e";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(":e", $email);
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
+    public static function fetchAllByBranch($branch) {
+        global $conn;
+        $sql = "SELECT * FROM user WHERE branch=:b";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(":b", $branch);
+        $stmt->execute();
+        return $row=$stmt->fetchAll();
     }
 }

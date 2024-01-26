@@ -75,7 +75,7 @@ include("./include/function.php")
         {
             //$checkUser = RegisterData::isFound($conn, $username, $password);
             //มี user ใน database    
-            if (RegisterData::isFound($username, $password) == 1)
+            if (RegisterData::rowCount($username, $password) == 1)
             {   // ส่งตัวแปรข้าม page
                 $_SESSION['username'] = $username;
                 $_SESSION['login_type'] = "admin";
