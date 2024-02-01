@@ -1,14 +1,10 @@
 <?php
 session_start();
-//include_once("./include/db.php");
 include("./include/function.php");
 ?>
 <?php
 // not admin
-if ($_SESSION['login_type'] != "admin") {
-    session_destroy();
-    header("location: login.php");
-}
+isAdmin();
 
 //logout
 if (isset($_GET['logout'])) {
@@ -20,17 +16,17 @@ if (isset($_GET['logout'])) {
 if (isset($_POST['add_branch'])) {
     $branch_name = $_POST['branch_name'];
     $branch_tag = $_POST['branch_tag'];
-    $branch_code_tag = $_POST['branch_code_tag'];
-    if (Branch::rowCount($branch_name, $branch_tag, $branch_code_tag) >= 1) {
+    $branch_code = $_POST['branch_code'];
+    if (Branch::rowCount($branch_name, $branch_tag, $branch_code) >= 1) {
         $_SESSION['error_log'] = "ข้อมูลซํ้า";
-        header("location: admin_index.php?branch_add");
+        header("location: admin_index.php?branch&branch_add");
         exit();
     } else {
-        $sql = "INSERT INTO branch (branch_name,branch_tag,branch_code_tag) VALUES (:name, :tag, :code)";
+        $sql = "INSERT INTO branch (branch_name,branch_tag,branch_code) VALUES (:name, :tag, :code)";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(":name", $branch_name);
         $stmt->bindParam(":tag", $branch_tag);
-        $stmt->bindParam(":code", $branch_code_tag);
+        $stmt->bindParam(":code", $branch_code);
         $stmt->execute();
 
         header("Location: admin_index.php?branch");
@@ -40,11 +36,16 @@ if (isset($_POST['add_branch'])) {
 //Delete branch --> bin icon 
 if (isset($_GET['branch_delete_tag'])) {
     $branch_delele_tag = $_GET['branch_delete_tag'];
+    //delete tag
     $sql = "DELETE FROM branch WHERE branch_tag=:b";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(":b", $branch_delele_tag);
     $stmt->execute();
-
+    //delete user in tag
+    $sql = "DELETE FROM user WHERE branch=:b";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(":b", $branch_delele_tag);
+    $stmt->execute();
     header("location: admin_index.php?branch");
     exit();
 }
@@ -74,12 +75,13 @@ if (isset($_POST['add_member'])) {
 }
 //delete member
 if (isset($_GET['delete_id'])) {
-
+    $tag = $_GET['view_member_tag'];
     $id = $_GET['delete_id'];
     $sql = "DELETE FROM user WHERE id=:id";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(":id", $id);
     $stmt->execute();
+    $_SESSION['delete-log'] = "ID: $id Deleted";
     header("location: admin_index.php?branch&view_member_tag=$tag");
     exit();
 }
@@ -94,15 +96,12 @@ if (isset($_POST['role_change'])) {
     $stmt->bindParam(":r", $role);
     $stmt->bindParam(":id", $id);
     $stmt->execute();
+    $_SESSION['log'] = "User ID $id role changed !";
     header("location: admin_index.php?branch&view_member_tag=$tag");
     exit();
 }
 ?>
-
-
-
-
-
+<!-- html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -116,6 +115,7 @@ if (isset($_POST['role_change'])) {
     ?>
     <!--  -->
     <link rel="stylesheet" href="./css/admin_index.css">
+
 </head>
 
 <body>
@@ -154,7 +154,7 @@ if (isset($_POST['role_change'])) {
         <!-- left sidebar -->
         <aside id="sidebar" class="d-flex flex-column flex-shrink-0 text-dark bg-white">
             <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item">
+                <li class="nav-item" id="branch-nav">
                     <a href="./admin_index.php?branch" class="nav-link text-dark">
                         <span class="material-symbols-outlined">
                             linked_services
@@ -162,7 +162,7 @@ if (isset($_POST['role_change'])) {
                         Branch
                     </a>
                 </li>
-                <li>
+                <li class="nav-item" id="curriculum-nav">
                     <a href="./admin_index.php?curriculum" class="nav-link  text-dark">
                         <span class="material-symbols-outlined">
                             book
@@ -170,14 +170,14 @@ if (isset($_POST['role_change'])) {
                         Curriculum
                     </a>
                 </li>
-                <li>
+                <!-- <li class="nav-item" id="member-nav">
                     <a href="./admin_index.php?member" class="nav-link  text-dark">
                         <span class="material-symbols-outlined">
                             person
                         </span>
                         Member
                     </a>
-                </li>
+                </li> -->
                 <li>
                     <a href="./admin_index.php?logout" class="nav-link  text-dark">
                         <span class="material-symbols-outlined">
@@ -206,36 +206,38 @@ if (isset($_POST['role_change'])) {
         <!-- end left sidebar -->
 
         <!-- right page -->
-        <section class="p-4">
+        <section class=" position-relative">
             <!-- sidebar toggle icon -->
             <span class="material-symbols-outlined">
-                <p id="sidebar-toggle">menu</p>
+                <p id="sidebar-toggle" class="">menu</p>
             </span>
             <!-- do not change -->
             <br>
             <!-- open branch -->
             <?php if (isset($_GET['branch'])) : ?>
+
                 <div id="function-container" class="bg-body d-flex align-items-center justify-content-between border border-dark pe-3">
                     <div>
                         <span class="material-symbols-outlined ms-1 bg-body">
                             linked_services
-                        </span> Branch
+                        </span>
+                        <span>Branch</span>
                     </div>
                     <span>
                         <a href="admin_index.php?branch&branch_add" id="btn-add"><button class="btn border border-dark " style="background-color: #DCFFCB;width:120px;">+ Branch</button></a>
                     </span>
                 </div>
-                <div class="branch-info-container mt-4 ">
+                <div class="branch-info-container p-4 mt-4 ">
                     <!-- each branch  -->
                     <?php foreach (Branch::showAll()->fetchAll() as $row) : ?>
-                        <div class="branch-info border border-dark rounded-3">
-                            <div class="d-flex flex-column justify-content-between h-100">
-                                <span class="material-symbols-outlined w-100 text-end"> more_horiz </span>
+                        <div class="branch-info border border-dark rounded-3 position-relative">
+                            <div class="d-flex flex-column justify-content-center h-100">
+                                <span class="material-symbols-outlined w-100 text-end position-absolute top-0"> more_horiz </span>
                                 <a href="admin_index.php?branch&view_member_tag=<?php echo $row['branch_tag'] ?>" id="view-branch-member-container" class="text-decoration-none text-dark position-relative">
                                     <div class="w-100 text-center h3">
                                         <?php echo $row['branch_tag'] . "<br>"; ?>
                                         <h6>
-                                            <?php echo $row['branch_code_tag']; ?>
+                                            <?php echo $row['branch_code']; ?>
                                         </h6>
                                     </div>
                                     <div class="position-absolute text-center w-100 top-0">
@@ -244,7 +246,7 @@ if (isset($_POST['role_change'])) {
                                         </h4>
                                     </div>
                                 </a>
-                                <span class="material-symbols-outlined w-100 text-end">
+                                <span class="material-symbols-outlined w-100 text-end position-absolute bottom-0">
                                     <a href="admin_index.php?branch&branch_delete_tag=<?php echo $row['branch_tag'] ?>" class="text-danger text-decoration-none" onclick="return confirm('Delete <?php echo $row['branch_tag'] . '?' ?>')">delete</a>
                                 </span>
                             </div>
@@ -271,7 +273,7 @@ if (isset($_POST['role_change'])) {
                                 </div>
                                 <div class="mt-2">
                                     <label class="w-100 text-start">Branch code tag</label>
-                                    <input required oninvalid="this.setCustomValidity('โปรดใส่ข้อมูล')" oninput="this.setCustomValidity('')" type="text" name="branch_code_tag" id="branch-code-tag" class="form-control">
+                                    <input required oninvalid="this.setCustomValidity('โปรดใส่ข้อมูล')" oninput="this.setCustomValidity('')" type="text" name="branch_code" id="branch-code-tag" class="form-control">
                                 </div>
                                 <hr>
                                 <div class="d-flex justify-content-between align-items-center ">
@@ -302,6 +304,33 @@ if (isset($_POST['role_change'])) {
                     ?>
                     <div id="view-member-full-page" class=" position-fixed top-0 start-0 w-100 h-100 text-white d-flex justify-content-center align-items-center">
                         <div id="view-member-container" class="text-dark position-relative">
+                            <div class="w-100 d-flex justify-content-center align-items-center position-absolute">
+                                <?php if (isset($_SESSION['log'])) : ?>
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        <div class=" d-flex justify-content-center align-items-center">
+                                            <span class="material-symbols-outlined me-1">
+                                                check_circle
+                                            </span>
+                                            <?php echo $_SESSION['log'];
+                                            unset($_SESSION['log']);
+                                            ?>
+                                        </div>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                <?php elseif (isset($_SESSION['delete-log'])) : ?>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <div class=" d-flex justify-content-center align-items-center">
+                                            <span class="material-symbols-outlined">
+                                                delete
+                                            </span>
+                                            <?php echo $_SESSION['delete-log'];
+                                            unset($_SESSION['delete-log']);
+                                            ?>
+                                        </div>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
                             <div class="position-absolute end-0">
                                 <span class="material-symbols-outlined">
                                     <a href="admin_index.php?branch" class=" text-decoration-none link-danger">close</a>
@@ -323,7 +352,7 @@ if (isset($_POST['role_change'])) {
                                 </div>
                             </div>
                             <br>
-                            <table id="show-member" class="table table-hover table-striped w-100 p-2" id="jQueryTable">
+                            <table class="table table-hover table-striped w-100 p-2" id="jQueryTable">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -345,7 +374,6 @@ if (isset($_POST['role_change'])) {
                                             <td style="width: 250px;">
                                                 <?php echo $row['role'] ?><span id="open-form[<?php echo $rowCount ?>]" class="open-form material-symbols-outlined ms-1">settings</span>
                                                 <form action="admin_index.php" method="post" id="form-role[<?php echo $rowCount ?>]" class="form-role">
-                                                    <div class=""></div>
                                                     <select name="role_select" id="" class="form-select">
                                                         <option value="Professor(SM)">Professor(SM)</option>
                                                         <option value="Professor">Professor</option>
@@ -355,7 +383,7 @@ if (isset($_POST['role_change'])) {
                                                     <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
                                                 </form>
                                             </td>
-                                            <td><a href="admin_index.php?branch&view_member_tag=T-12&delete_id=<?php echo $row['id'] ?>" class=" btn btn-danger ">Delete</a></td>
+                                            <td><a href="admin_index.php?branch&view_member_tag=<?php echo $tag; ?>&delete_id=<?php echo $row['id'] ?>" class=" btn btn-danger " onclick="return confirm('Delete ID <?php echo $row['id'] ?> ?');">Delete</a></td>
                                         </tr>
                                         <?php $rowCount = $rowCount + 1 ?>
                                     <?php endforeach; ?>
@@ -363,7 +391,6 @@ if (isset($_POST['role_change'])) {
                             </table>
                         </div>
                     </div>
-
                 <?php endif; ?>
                 <!-- end click brach to view and add member -->
 
@@ -407,11 +434,67 @@ if (isset($_POST['role_change'])) {
             <?php endif ?>
             <!-- end open branch -->
 
-            <!-- open member -->
-            <?php if (isset($_GET['member'])) : ?>
+            <!-- open curriculum -->
+            <?php if (isset($_GET['curriculum'])) : ?>
+                <div id="function-container" class="bg-body d-flex align-items-center justify-content-between border border-dark pe-3">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <span class="material-symbols-outlined">
+                            book
+                        </span>
+                        <span>Curriculum</span>
+                    </div>
+                </div>
+                <div class="branch-info-container p-4 mt-4 ">
+                    <!-- each branch  -->
+                    <?php foreach (Branch::showAll()->fetchAll() as $row) : ?>
+                        <div class="branch-info border border-dark rounded-3 position-relative">
+                            <span class="material-symbols-outlined w-100 text-end position-absolute"> more_horiz </span>
+                            <div class="d-flex flex-column justify-content-center h-100">
+                                <a href="admin_index.php?view_curriculum_tag=<?php echo $row['branch_tag'] ?>" id="view-branch-member-container" class="text-decoration-none text-dark position-relative">
+                                    <div class="w-100 text-center h3">
+                                        <?php echo $row['branch_tag'] . "<br>"; ?>
+                                        <h6>
+                                            <?php echo $row['branch_code']; ?>
+                                        </h6>
+                                    </div>
+                                    <div class="position-absolute text-center w-100 top-0">
+                                        <h4 id="view-branch-member">
+                                            View&Add <br> <?php echo $row['branch_tag']; ?> course
+                                        </h4>
+                                    </div>
+                                </a>
 
+                            </div>
+                            <div class="text-center overflow-hidden fw-bold">
+                                <?php echo $row['branch_name']; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                    <!-- end each branch -->
+                </div>
             <?php endif; ?>
-            <!-- end open member -->
+            <!-- end open curriculum -->
+
+            <!-- open each curriculum-->
+            <?php if (isset($_GET['view_curriculum_tag'])) : ?>
+                <div id="function-container" class="bg-body d-flex align-items-center justify-content-between border border-dark pe-3">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <span class="material-symbols-outlined">
+                            <span style="font-size: 50px;">person</span>
+                        </span>
+                        <span class="material-symbols-outlined">
+
+                            <span style="font-size: 50px;">arrow_forward</span>
+                        </span>
+                        <span class="text-dark h1"><?php echo $_GET['view_curriculum_tag']; ?></span>
+                    </div>
+                    <span>
+                        <a href="admin_add_curriculum.php?tag=<?php echo $_GET['view_curriculum_tag']; ?>" id="btn-add"><button class="btn border border-dark " style="background-color: #DCFFCB;">+ Add Course</button></a>
+                    </span>
+                </div>
+            <?php endif; ?>
+            <!-- end open each curriculum-->
+
         </section>
         <!-- end right page -->
     </main>
@@ -430,7 +513,6 @@ if (isset($_POST['role_change'])) {
             console.log(width);
             //labtop
             if (width > 768) {
-
                 sidebar.style.left = "0%"
                 section.style.left = "200px"
             } //ipad 
@@ -466,7 +548,6 @@ if (isset($_POST['role_change'])) {
                     section.style.left = "100px"
                 }
             } else if (width <= 600) {
-                console.log(11);
                 if (sidebar.style.left === "0%") {
                     sidebar.style.left = "-100%"
                     section.style.left = "0px"
@@ -485,11 +566,11 @@ if (isset($_POST['role_change'])) {
             scrollX: true,
             scrollCollapse: true,
             scrollY: '50vh'
-
         });
     </script>
+
+    <!-- //open role setting   -->
     <script>
-        //open role setting  
         const RowCount = <?php echo $rowCount; ?>;
         for (let i = 0; i < RowCount; i++) {
             let open_form = document.getElementById("open-form" + "[" + i + "]")
@@ -501,6 +582,17 @@ if (isset($_POST['role_change'])) {
                     form_role.style.display = "none"
                 }
             })
+        }
+    </script>
+    <!-- nav bg clicked color -->
+    <script>
+        let url = new URLSearchParams(window.location.search);
+        const bgClicked = "rgba(104, 193, 228, 0.57)"
+        console.log(url);
+        if (url.has('branch')) {
+            document.getElementById('branch-nav').style.background = bgClicked
+        } else if (url.has('curriculum')) {
+            document.getElementById('curriculum-nav').style.background = bgClicked
         }
     </script>
 </body>

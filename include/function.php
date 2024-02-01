@@ -13,6 +13,15 @@ try {
 } catch (PDOException $e) {
     echo "Connection failed <br>" . $e;
 }
+//-------//
+function isAdmin() {
+    if ($_SESSION['login_type'] != "admin") {
+        session_destroy();
+        header("location: login.php");
+        exit();
+    }
+}
+
 //-----------------------------//
 class RegisterData {
     public static function rowCount($username, $password) {
@@ -25,7 +34,6 @@ class RegisterData {
 
         return $stmt->rowCount();
     }
-
 
     public static function getData($username) {
         global $conn;
@@ -56,8 +64,16 @@ class Branch {
         $sql = "SELECT * FROM branch";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
-
         return $stmt;
+    }
+
+    public static function getData($tag) {
+        global $conn;
+        $sql = "SELECT * FROM branch WHERE branch_tag=:tag";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(":tag", $tag);
+        $stmt->execute();
+        return $stmt->fetch();
     }
 }
 
@@ -76,6 +92,6 @@ class Member {
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(":b", $branch);
         $stmt->execute();
-        return $row=$stmt->fetchAll();
+        return $row = $stmt->fetchAll();
     }
 }

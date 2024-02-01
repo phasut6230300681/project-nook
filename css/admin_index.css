@@ -4,7 +4,6 @@ body {
   height: 100%;
   width: 100%;
   margin: 0;
-  
 }
 * {
   margin: 0;
@@ -34,12 +33,15 @@ aside {
       border-bottom: 1px solid black;
       width: 100%;
     }
+    & li:hover{
+      background-color: rgba(175, 210, 210, 0.911);
+    }
   }
 }
 #sidebar-toggle {
-  position: relative;
-  left: -25px;
-  top: -20px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 #sidebar-toggle:hover {
   cursor: pointer;
@@ -76,6 +78,10 @@ section {
 .branch-info {
   width: 200px;
   height: 200px;
+  background-color: rgb(6, 243, 164);
+}
+.branch-info:hover {
+ 
   background-color: aquamarine;
 }
 #add-branch-container {
@@ -110,7 +116,7 @@ section {
 #view-branch-member-container {
   & #view-branch-member {
     visibility: hidden;
-    height: 50px;
+    height: 70px;
   }
 }
 #view-branch-member-container:hover {
@@ -127,7 +133,7 @@ section {
 }
 #view-member-container {
   width: 90%;
- 
+
   background-color: rgb(251, 251, 251);
 }
 #view-member-header {
@@ -147,13 +153,16 @@ section {
   background-size: 20px;
 }
 /* role setting */
-.form-role{
+.form-role {
   display: none;
 }
-.open-form{
+.open-form {
   cursor: pointer;
 }
+
 /* end branch */
+
+/* Curriculumn */
 @media only screen and (max-width: 768px) {
   aside {
     width: 100px;

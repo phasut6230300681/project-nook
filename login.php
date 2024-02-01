@@ -66,31 +66,36 @@ include("./include/function.php")
 
     <!-- if email,password not null check user in database-->
     <?php
-    if (isset($_POST['login']))
-    {
+    if (isset($_POST['login'])) {
         $username = $_POST['username'];
         $password = $_POST['password'];
+        // if ($username != '' && $password != '') {
+        //     //$checkUser = RegisterData::isFound($conn, $username, $password);
+        //     //มี user ใน database    
+        //     if (RegisterData::rowCount($username, $password) == 1) {   // ส่งตัวแปรข้าม page
+        //         $_SESSION['username'] = $username;
+        //         $_SESSION['login_type'] = "admin";
+        //         header("location: admin_index.php?branch");
+        //         exit();
+        //     }
+        //     // ไม่มีข้อมูล
+        //     else {
+        //         $_SESSION['error_login'] = "User not found";
+        //         header("Location: login.php");
+        //         exit();
+        //     }
 
-        if ($username != '' && $password != '')
-        {
-            //$checkUser = RegisterData::isFound($conn, $username, $password);
-            //มี user ใน database    
-            if (RegisterData::rowCount($username, $password) == 1)
-            {   // ส่งตัวแปรข้าม page
-                $_SESSION['username'] = $username;
-                $_SESSION['login_type'] = "admin";
-                header("location: admin_index.php?branch");
-                exit();
-            }
-            // ไม่มีข้อมูล
-            else
-            {
-                $_SESSION['error_login'] = "User not found";
-                header("Location: login.php");
-                exit();
-            }
-
-            exit;
+        //     exit;
+        // }
+        if ($username == "admin" && $password == "123") {
+            $_SESSION['username'] = $username;
+            $_SESSION['login_type'] = "admin";
+            header("location: admin_index.php?branch");
+            exit();
+        } else {
+            $_SESSION['error_login'] = "User not found";
+            header("Location: login.php");
+            exit();
         }
     }
     ?>
