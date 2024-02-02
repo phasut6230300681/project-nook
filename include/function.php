@@ -49,7 +49,7 @@ class RegisterData {
 class Branch {
     public static function rowCount($name, $tag, $code) {
         global $conn;
-        $sql = "SELECT * FROM branch WHERE branch_name=:name OR branch_tag=:tag OR branch_code_tag=:code";
+        $sql = "SELECT * FROM branch WHERE branch_name=:name OR branch_tag=:tag OR branch_code=:code";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(":name", $name);
         $stmt->bindParam(":tag", $tag);

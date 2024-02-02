@@ -215,7 +215,6 @@ if (isset($_POST['role_change'])) {
             <br>
             <!-- open branch -->
             <?php if (isset($_GET['branch'])) : ?>
-
                 <div id="function-container" class="bg-body d-flex align-items-center justify-content-between border border-dark pe-3">
                     <div>
                         <span class="material-symbols-outlined ms-1 bg-body">
